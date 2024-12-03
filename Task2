@@ -1,42 +1,56 @@
-*Name:* Jamapala Chandrika
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
-*Company:* CODTECH IT SLOUTIONS
+# Step 1: Sample Data for Classification
+data = {
+    'Feature1': [2, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+    'Feature2': [1, 5, 2, 6, 3, 7, 4, 8, 5, 9],
+    'Label': [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+}
 
-*Intern ID:* CT08DS9918
+# Convert data to DataFrame
+df = pd.DataFrame(data)
 
-*Duration:* November to December 2024
+# Step 2: Splitting the Data into Features (X) and Labels (y)
+X = df[['Feature1', 'Feature2']]  # Features
+y = df['Label']  # Target/Label
 
-#### Overview of the Project
+# Step 3: Train-Test Split (80% training, 20% testing)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-*Name of the project:* 
+# Step 4: Initialize Different AI Models
+logistic_model = LogisticRegression()
+decision_tree_model = DecisionTreeClassifier()
+random_forest_model = RandomForestClassifier()
 
-*Natural Language Processing using Sentimental analysis with Text classification*
+# Step 5: Train the Models
+logistic_model.fit(X_train, y_train)
+decision_tree_model.fit(X_train, y_train)
+random_forest_model.fit(X_train, y_train)
 
+# Step 6: Make Predictions using Test Data
+logistic_predictions = logistic_model.predict(X_test)
+decision_tree_predictions = decision_tree_model.predict(X_test)
+random_forest_predictions = random_forest_model.predict(X_test)
 
-This sentiment analysis program is designed to assess the emotional tone of user-provided text using Natural Language Processing (NLP). It employs the VADER (Valence Aware Dictionary and Sentiment Reasoner) tool, which is particularly effective for analyzing sentiments in social media and short text formats.
+# Step 7: Define a Function to Evaluate Model Performance
+def evaluate_model(y_true, y_pred, model_name):
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+    
+    print(f"\nPerformance of {model_name}:")
+    print(f"Accuracy: {accuracy:.2f}")
+    print(f"Precision: {precision:.2f}")
+    print(f"Recall: {recall:.2f}")
+    print(f"F1-Score: {f1:.2f}")
 
-#### Key Components
-
-1. *Library Usage*:
-   - The program utilizes the NLTK library, specifically the SentimentIntensityAnalyzer from the VADER toolset, to compute sentiment scores.
-
-2. *Functionality*:
-   - *Input Handling*: The program prompts users to enter sentences for sentiment analysis in a loop, allowing for continuous input until the user chooses to exit.
-   - *Sentiment Analysis*: For each input sentence, the program calculates:
-     - *Positive, Negative, and Neutral Scores*: These represent the proportion of the text that falls into each sentiment category.
-     - *Compound Score*: A normalized score that reflects the overall sentiment, ranging from -1 (most negative) to +1 (most positive).
-   - *Sentiment Classification*: Based on the compound score, the sentiment is classified as Positive, Negative, or Neutral.
-
-3. *Output*:
-   - The program displays the sentiment classification along with detailed sentiment scores for the provided text.
-
-#### User Experience
-Users can easily interact with the program through the command line. They enter sentences, receive instant feedback on the sentiment, and can analyze multiple sentences in one session. The simple interface makes it accessible for anyone interested in understanding text sentiment.
-
-#### Applications
-This program can be used for various applications, such as:
-- Analyzing customer feedback
-- Monitoring social media sentiment
-- Understanding public opinion on specific topics
-
-Overall, this program serves as a foundational tool for exploring sentiment analysis and can be further enhanced with additional features or integrated into larger applications.
+# Step 8: Evaluate the Performance of Each Model
+evaluate_model(y_test, logistic_predictions, "Logistic Regression")
+evaluate_model(y_test, decision_tree_predictions, "Decision Tree")
+evaluate_model(y_test, random_forest_predictions, "Random Forest")
